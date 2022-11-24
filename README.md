@@ -1,1 +1,1 @@
-# -LeetCode-with-TypeScript
+# LeetCode-with-TypeScript
