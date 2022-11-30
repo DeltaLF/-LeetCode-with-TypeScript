@@ -1,4 +1,4 @@
-import { mergeKLists } from "../23_Merge k Sorted Lists";
+import { mergeKLists } from "../23_Merge_k_Sorted_Lists";
 import {ListNode} from "../heap.type";
 
 it('tests mergeKLists',()=>{
