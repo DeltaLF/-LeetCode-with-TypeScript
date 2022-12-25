@@ -1,5 +1,5 @@
 class TreeNode{
-    public val:number=0;
+    public val:number|null=0;
     public left:TreeNode|null = null;
     public right:TreeNode|null = null;
     constructor(val?:number, left?:TreeNode, right?:TreeNode) {
