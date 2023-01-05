@@ -10,7 +10,41 @@ import { ListNode } from "./linked_list.type";
  * @param {ListNode} head
  * @return {ListNode}
  */
- var reverseList = function(head:ListNode<number>|null):ListNode<number>|null {    
+
+var reverseList = function(head:ListNode<number>|null):ListNode<number>{
+    if(!head || !head.next) return head!;
+    let prevNode = null;
+    let nextNode:undefined | null | ListNode<number> = head.next;
+    while(!!head){
+        head.next = prevNode;
+        prevNode = head;
+        head = nextNode as null | ListNode<number>;
+        nextNode = nextNode?.next;
+    }
+    return prevNode!;
+};
+
+var reverseListStartFromHeadNext = function(head:ListNode<number>):ListNode<number> {
+    if( !head || !head.next) return head;
+    let preNode = head;
+    let node = head.next;
+    let nextNode = node.next;
+    /*
+    1 -> 2 -> 3 -> 4
+    */
+    preNode.next = null;
+    node.next = preNode;
+    while(!!nextNode){
+        preNode = node;
+        node = nextNode;
+        nextNode = nextNode.next;
+        node.next = preNode;
+    }
+    return node
+    
+};
+
+ var reverseListOld = function(head:ListNode<number>|null):ListNode<number>|null {    
     if(!head) return null;
     if(!head.next) return head; // only one node
     /*
