@@ -4,7 +4,30 @@ import { endianness } from "os";
  * @param {number[][]} points
  * @return {number}
  */
-var findMinArrowShots = function(points:number[][]):number {
+
+var findMinArrowShots = function(points:number[][]):number{
+    points.sort((a,b)=>a[0] - b[0]);
+    let start = points[0][0];
+    let end = points[0][1];
+    let count = 1;
+    let i = 0;
+    while( i < points.length -1 ){
+        if( end < points[i+1][0] ){
+            // not overlaping with next interval
+            count++;
+            start = points[i+1][0];
+            end = points[i+1][1];
+        }else{ 
+            // overlaping happens so update end, start to overlaping area
+            end = Math.min( end , points[i+1][1]);
+            start = Math.max( start , points[i+1][0]);
+        }
+        i++;
+    } 
+    return count
+}
+
+var findMinArrowShotsOld = function(points:number[][]):number {
     /** 
      *   [[1,2],[2,3],[3,4],[4,5]]
      *    find the overlap area
