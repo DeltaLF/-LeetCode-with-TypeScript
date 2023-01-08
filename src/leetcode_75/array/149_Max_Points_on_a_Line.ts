@@ -2,7 +2,57 @@
  * @param {number[][]} points
  * @return {number}
  */
-var maxPoints = function(points:number[][]):number {
+
+var maxPoints = function(points:number[][]):number{
+ let linesHashMap:{[key:string]:number};
+ let max:number = 1;
+ // iterate through any two points once 
+ for(let i =0;i < points.length -1; i++){
+    linesHashMap = {}
+  for(let j=i+1;j < points.length;j++){
+      const [a0,a1] = points[i];
+      const [b0,b1] = points[j];
+      /* normalized lineExpression:
+      'a0,a1+'+slope.toFixed(0);
+      a0 for x coordinate
+      a1 for y coordinate
+      one of a0,a1 must be 0;
+       */
+      let lineExpression:string = '';
+      if( a0 === b0){
+          // vertical line (not necessary pass y=0)
+          // but must pass (a0,0) with slope === Infinity
+          lineExpression = a0.toString()+',0+Infinity'
+      }else if (a1 === b1)
+      {
+          // horizontal line (not necessary pass x=0)
+          // but must pass (0,a1) with slope 0
+          lineExpression = '0,' + a1.toString() + '+0';
+      }else{
+          // slope !== 0, Infinity
+          /*
+          line equations: (a0+t, a1+slope*t)
+          if x coordinate is 0
+          t = -a0
+          y coordinate is a1 + slope * (-a0)
+           */
+          const slope = ((b1 - a1)/(b0 - a0));
+          const yCoordinate = a1 - slope *(a0);
+          lineExpression = '0,' + yCoordinate.toFixed(10) + '+' + slope.toFixed(10);  
+      }
+      if( linesHashMap[lineExpression] > 0 ){
+        linesHashMap[lineExpression] ++;
+      }else{
+          linesHashMap[lineExpression] = 2; // tow points to form a line
+      }
+      max = Math.max(max, linesHashMap[lineExpression])
+  }
+ }
+  return max;
+
+}
+
+var maxPointsUnOptimized = function(points:number[][]):number {
     /*
     [[1,1],[3,2],[5,3],[4,1],[2,3],[1,4]]
      |
