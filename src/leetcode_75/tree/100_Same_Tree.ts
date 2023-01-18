@@ -12,7 +12,18 @@ import { TreeNode } from "./tree.type";
  * @param {TreeNode} q
  * @return {boolean}
  */
- var isSameTree = function(p:TreeNode | null, q:TreeNode | null):boolean {
+
+var isSameTree = function(p:TreeNode|null|undefined, q:TreeNode|null|undefined):boolean {
+    if( !p && !q) return true;
+    if(p?.val !== q?.val) return false;
+    const checkLeft = isSameTree(p?.left, q?.left);
+    const checkRight = isSameTree(p?.right, q?.right);
+    return checkLeft && checkRight;
+}
+
+
+
+ var isSameTreeOld = function(p:TreeNode | null, q:TreeNode | null):boolean {
     if(!p && !q) return true
     if(!p || !q) return false
     // use preorder DFS 

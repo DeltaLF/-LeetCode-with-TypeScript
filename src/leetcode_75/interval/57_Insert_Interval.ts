@@ -31,17 +31,7 @@ function insert(intervals: number[][], newInterval: number[]): number[][] {
       intervals[intervals.length - right.length - 1][1]
     );
   }
-  console.log(
-    intervals,
-    "left",
-    left,
-    "newInterval",
-    newInterval,
-    "right",
-    right,
-    "ans",
-    left.concat(newInterval, right)
-  );
+
   return left.concat([newInterval], right);
 }
 
