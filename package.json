@@ -29,6 +29,7 @@
     "typescript": "^4.8.4"
   },
   "dependencies": {
-    "@datastructures-js/queue": "^4.2.3"
+    "@datastructures-js/queue": "^4.2.3",
+    "datastructures-js": "^12.0.0"
   }
 }
