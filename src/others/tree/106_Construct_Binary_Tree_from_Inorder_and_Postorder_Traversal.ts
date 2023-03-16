@@ -10,6 +10,92 @@ export class TreeNode {
   }
 }
 
+function buildTree(inorder: number[], postorder: number[]): TreeNode | null {
+  /*
+  Input: inorder = [9,3,15,20,7], postorder = [9,15,7,20,3]
+  Output: [3,9,20,null,null,15,7]
+         3
+      9    20
+         15   7
+      
+    posOrder: the root is at last
+    inOrder: the root is at middle (left is left tree right is right tree)
+         1
+      2    3 
+    4  5  6  7
+             l           r
+    inoder  [4,2,5,1,6,3,7]
+                  root
+                     l   r
+    postOder[4,5,2,6,7,3,1]
+                         root    
+                   l   r
+    right subTree
+    for inorder l:4 r:6
+    for posorder l:3 r:5
+    maybe we should not use l and r
+    instead use lin, lpos and len
+    optimize:
+    1. use HashMap to avoid indexOf in every loop
+    2. instead of slice, simply use left and right pointer
+
+   */
+  if (inorder.length === 0) return null;
+  const inOderhashMap: { [key: string]: number } = {};
+  for (let ind in inorder) {
+    inOderhashMap[inorder[ind].toString()] = parseInt(ind);
+  }
+
+  function helper(lin: number, lpos: number, len: number): TreeNode | null {
+    //  the l and r should be respected to inorder or postorder?
+    if (len === 0) return null;
+    if (len === 1) return new TreeNode(postorder[lpos]);
+    const rootNum = postorder[lpos + len - 1];
+    const root = new TreeNode(rootNum);
+    const rootNumAtInorderIndex = inOderhashMap[rootNum];
+    const newLeftLen = rootNumAtInorderIndex - lin;
+    const newRightLen = len - newLeftLen - 1;
+    root.left = helper(lin, lpos, newLeftLen);
+    root.right = helper(lin + newLeftLen + 1, lpos + newLeftLen, newRightLen);
+    return root;
+  }
+  return helper(0, 0, inorder.length);
+}
+
+function buildTreeNotOptimizedII(
+  inorder: number[],
+  postorder: number[]
+): TreeNode | null {
+  /*
+  Input: inorder = [9,3,15,20,7], postorder = [9,15,7,20,3]
+  Output: [3,9,20,null,null,15,7]
+         3
+      9    20
+         15   7
+      
+    posOrder: the root is at last
+    inOrder: the root is at middle (left is left tree right is right tree)
+         1
+      2    3 
+    4  5  6  7
+    inoder  [4,2,5,1,6,3,7]
+                  root
+    postOder[4,5,2,6,7,3,1]
+                         root    
+   */
+  if (inorder.length === 0) return null;
+  const rootNum = postorder[postorder.length - 1];
+  const root = new TreeNode(rootNum);
+  const indexOfRootNum = inorder.indexOf(rootNum);
+  root.left = buildTree(
+    inorder.splice(0, indexOfRootNum),
+    postorder.splice(0, indexOfRootNum)
+  );
+  postorder.pop(); // remove root number
+  root.right = buildTree(inorder.splice(1, inorder.length - 1), postorder);
+  return root;
+}
+
 /*
               1
             /   \
@@ -31,7 +117,7 @@ range between l and r represents a subtree
 
 */
 
-function buildTree(inorder: number[], postorder: number[]): TreeNode | null {
+function buildTreeOld(inorder: number[], postorder: number[]): TreeNode | null {
   const n = inorder.length;
   const inOrderMap: { [key: number]: number } = {};
   for (let i = 0; i < n; i++) {
