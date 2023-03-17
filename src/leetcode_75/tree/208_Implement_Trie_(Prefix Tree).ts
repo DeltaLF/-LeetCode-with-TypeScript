@@ -1,4 +1,61 @@
-class Trie {
+var Trie = function () {
+  this.neastedMap = {};
+};
+
+/**
+ * @param {string} word
+ * @return {void}
+ */
+Trie.prototype.insert = function (word: string): void {
+  let map = this.neastedMap;
+  for (let letter of word) {
+    if (!(letter in map)) {
+      map[letter] = {};
+    }
+    map = map[letter];
+  }
+  map["#"] = true;
+};
+
+/**
+ * @param {string} word
+ * @return {boolean}
+ */
+Trie.prototype.search = function (word: string): boolean {
+  let map = this.neastedMap;
+  for (let letter of word) {
+    if (!(letter in map)) {
+      return false;
+    }
+    map = map[letter];
+  }
+  return "#" in map;
+};
+
+/**
+ * @param {string} prefix
+ * @return {boolean}
+ */
+Trie.prototype.startsWith = function (prefix: string): boolean {
+  let map = this.neastedMap;
+  for (let letter of prefix) {
+    if (!(letter in map)) {
+      return false;
+    }
+    map = map[letter];
+  }
+  return true;
+};
+
+/**
+ * Your Trie object will be instantiated and called as such:
+ * var obj = new Trie()
+ * obj.insert(word)
+ * var param_2 = obj.search(word)
+ * var param_3 = obj.startsWith(prefix)
+ */
+
+class TrieOld {
   private strTree: { [key: string]: {} } = {};
   constructor() {}
 
