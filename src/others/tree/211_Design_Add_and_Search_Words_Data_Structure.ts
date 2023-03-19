@@ -1,4 +1,44 @@
+class TrieNode {
+  public map: { [key: string]: TrieNode } = {};
+  public end = false;
+}
+
+/*
+node{ a: node{ end:true} }
+*/
 class WordDictionary {
+  public node = new TrieNode();
+  constructor() {}
+
+  addWord(word: string): void {
+    let node = this.node;
+    for (let letter of word) {
+      if (!(letter in node.map)) {
+        node.map[letter] = new TrieNode();
+      }
+      node = node.map[letter];
+    }
+    node.end = true;
+  }
+
+  search(word: string, ind = 0, node: TrieNode | null = null): boolean {
+    if (node === null) node = this.node;
+    for (let i = ind; i < word.length; i++) {
+      if (word[i] === ".") {
+        for (let letter in node.map) {
+          if (this.search(word, i + 1, node.map[letter])) return true;
+        }
+        return false;
+      } else {
+        if (!(word[i] in node.map)) return false;
+        node = node.map[word[i]];
+      }
+    }
+    return node.end;
+  }
+}
+
+class WordDictionaryMap {
   public map: { [key: string]: true }[] = [];
   constructor() {}
 
@@ -61,3 +101,27 @@ export { WordDictionary };
 }}
  how about 2d [[a~z], [a~z],..]
 */
+
+/*
+what we have
+{a:string, b:number, c:boolean}
+we want to declare another object type
+{a:(string)=>string, b:(number)=>number, c:boolean=>boolean}
+*/
+type MapObjectType<T> = {
+  [Property in keyof T]: (val: T[Property]) => T[Property];
+};
+
+type Original = {
+  a: string;
+  b: number;
+  c: boolean;
+};
+
+type newType = MapObjectType<Original>;
+
+const nt: newType = {
+  a: (val) => val + "abc",
+  b: (num) => num + 100,
+  c: (boolean) => boolean || true,
+};
