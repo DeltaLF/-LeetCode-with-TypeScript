@@ -5,6 +5,47 @@ function numOfMinutes(
   informTime: number[]
 ): number {
   /*
+  Input: n = 1, headID = 0, manager = [-1], informTime = [0]
+  Output: 0
+  
+  Input: n = 6, headID = 2, manager = [2,2,-1,2,2,2], informTime = [0,0,1,0,0,0]
+  Output: 1
+        2
+  0 1 3  4  5
+
+  since differnt layer might have different inform time => we should use dft
+   */
+  const tree: number[][] = [];
+  for (let i = 0; i < n; i++) {
+    tree[i] = [];
+  }
+  for (let i = 0; i < n; i++) {
+    if (manager[i] !== -1) {
+      tree[manager[i]!].push(i); //add subordinate to his manager
+    }
+  }
+  let max = 0;
+  function dft(i = headID, time = 0): void {
+    if (tree[i].length === 0) {
+      // i doesn't have subordinate
+      max = Math.max(max, time);
+      return;
+    }
+    for (const subordinate of tree[i]) {
+      dft(subordinate, informTime[i] + time);
+    }
+  }
+  dft();
+  return max;
+}
+
+function numOfMinutesOld(
+  n: number,
+  headID: number,
+  manager: number[],
+  informTime: number[]
+): number {
+  /*
     Input: n = 6, headID = 2, manager = [2,2,-1,2,2,2], informTime = [0,0,1,0,0,0]
     return 1
 
