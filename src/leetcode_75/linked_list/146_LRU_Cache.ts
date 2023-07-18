@@ -1,3 +1,68 @@
+class LRUCacheTS {
+  private head: DoubleLinkedlistNode;
+  private tail: DoubleLinkedlistNode;
+  private capacity: number;
+  private map = new Map<string, DoubleLinkedlistNode>();
+  constructor(capacity: number) {
+    this.head = new DoubleLinkedlistNode("head", -1);
+    this.tail = new DoubleLinkedlistNode("tail", -1);
+    this.head.next = this.tail;
+    this.tail.prev = this.head;
+    this.capacity = capacity;
+  }
+
+  get(key: number): number {
+    const node = this.map.get(key.toString());
+    if (node === undefined) return -1;
+    this.movToHead(node);
+    return node.val;
+  }
+  movToHead(node: DoubleLinkedlistNode): void {
+    node.prev!.next = node.next;
+    node.next!.prev = node.prev;
+
+    node.next = this.head.next;
+    node.next!.prev = node;
+    node.prev = this.head;
+    this.head.next = node;
+  }
+
+  put(key: number, value: number): void {
+    const oldNode = this.map.get(key.toString());
+    if (oldNode === undefined) {
+      const newNode = new DoubleLinkedlistNode(key.toString(), value);
+      this.map.set(key.toString(), newNode);
+      newNode.next = this.head.next;
+      this.head.next!.prev = newNode;
+      newNode.prev = this.head;
+      this.head.next = newNode;
+      if (this.map.size > this.capacity) {
+        const depricatedNode = this.tail.prev;
+        this.map.delete(depricatedNode!.key);
+        this.tail.prev!.prev!.next = this.tail;
+        this.tail.prev = this.tail.prev!.prev;
+      }
+    } else {
+      this.movToHead(oldNode);
+      oldNode.val = value;
+    }
+  }
+}
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * var obj = new LRUCache(capacity)
+ * var param_1 = obj.get(key)
+ * obj.put(key,value)
+ */
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * var obj = new LRUCache(capacity)
+ * var param_1 = obj.get(key)
+ * obj.put(key,value)
+ */
+
 class DoubleLinkedlistNode {
   public prev: DoubleLinkedlistNode | null = null;
   public next: DoubleLinkedlistNode | null = null;
@@ -10,6 +75,7 @@ class DoubleLinkedlistNode {
 /**
  * @param {number} capacity
  */
+
 var LRUCache = function (capacity: number) {
   this.capacity = capacity;
   this.hashMap = {} as { [key: string]: DoubleLinkedlistNode };
@@ -96,4 +162,4 @@ LRUCache.prototype.put = function (key: number, value: number): void {
  * obj.put(key,value)
  */
 
-export { LRUCache };
+export { LRUCache, LRUCacheTS };
